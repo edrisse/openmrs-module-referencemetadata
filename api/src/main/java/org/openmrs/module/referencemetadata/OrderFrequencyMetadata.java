@@ -9,7 +9,9 @@
 package org.openmrs.module.referencemetadata;
 
 import org.openmrs.Concept;
+import org.openmrs.OpenmrsObject;
 import org.openmrs.OrderFrequency;
+import org.openmrs.api.CannotUpdateObjectInUseException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.springframework.stereotype.Component;
@@ -33,8 +35,17 @@ public class OrderFrequencyMetadata extends AbstractMetadataBundle {
 
 		return obj;
 	}
-
+	
 	@Override
+    protected <T extends OpenmrsObject> T install(T incoming) {
+        try {
+            return super.install(incoming);
+        } catch (CannotUpdateObjectInUseException e) {
+            return incoming;
+        }
+    }
+
+    @Override
 	public void install() throws Exception {
 		install(orderFrequency(Concepts.ONCE, OrderFrequencies.ONCE, 1.0));
 		install(orderFrequency(Concepts.EVERY_30_MINS, OrderFrequencies.EVERY_30_MINS, 48.0));

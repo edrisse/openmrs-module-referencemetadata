@@ -14,6 +14,10 @@
 
 package org.openmrs.module.referencemetadata.reports;
 
+import static org.hamcrest.Matchers.contains;
+
+import java.sql.Timestamp;
+
 import org.junit.Assert;
 import org.openmrs.Cohort;
 import org.openmrs.module.referencemetadata.reporting.reports.NumberOfPatientRegistrations;
@@ -23,10 +27,6 @@ import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.report.ReportData;
 import org.openmrs.module.reporting.report.manager.ReportManager;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.sql.Timestamp;
-
-import static org.hamcrest.Matchers.contains;
 
 /**
  * Tests the NumberOfPatientRegistrations report
@@ -44,8 +44,8 @@ public class NumberOfPatientRegistrationsTest extends ReportManagerTest {
 	@Override
 	public EvaluationContext getEvaluationContext() {
 		EvaluationContext context = new EvaluationContext();
-		context.addParameterValue("startDate", DateUtil.getDateTime(2017, 6, 1));
-		context.addParameterValue("endDate", DateUtil.getDateTime(2017, 6, 16));
+		context.addParameterValue("startDate", DateUtil.getDateTime(2016, 6, 1));
+		context.addParameterValue("endDate", DateUtil.getDateTime(2018, 6, 16));
 		context.setBaseCohort(new Cohort("50, 51"));
 		return context;
 	}
@@ -55,7 +55,6 @@ public class NumberOfPatientRegistrationsTest extends ReportManagerTest {
 
 		Timestamp timestamp = Timestamp.valueOf("2017-06-15 08:26:51.0");
 		SimpleDataSet dataSet = (SimpleDataSet) data.getDataSets().values().iterator().next();
-
 		Assert.assertThat(dataSet.getRows(), contains(hasData("Registered DateTime", timestamp)));
 		Assert.assertThat(dataSet.getRows(), contains(hasData("OpenMRS ID", "10004M")));
 		Assert.assertThat(dataSet.getRows(), contains(hasData("Given Name", "Jude")));
